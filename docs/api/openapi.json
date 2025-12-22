@@ -1,0 +1,424 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Essensplan API",
+    "description": "",
+    "contact": {
+      "email": "support@schulzentrum.de"
+    },
+    "license": {
+      "name": "Open Source License 3.0",
+      "url": "https://opensource.org/license/osl-3-0"
+    },
+    "version": "0.0.1"
+  },
+  "servers": [
+    {
+      "url": "https://secure-gateway.schulzentrum.de/api/v1"
+    }
+  ],
+  "tags": [
+    {
+      "name": "plans",
+      "description": "Daily and weekly meal plans"
+    },
+    {
+      "name": "meals",
+      "description": "Information about meals"
+    },
+    {
+      "name": "specifics",
+      "description": "More information on details like allergens and supplements"
+    },
+    {
+      "name": "openmensa",
+      "description": "Endpoints that are compatibil with OpenMensa APIs",
+      "externalDocs": {
+        "description": "Developer Documentation",
+        "url": "https://docs.openmensa.org/"
+      }
+    }
+  ],
+  "paths": {
+    "/allergens": {
+      "get": {
+        "tags": [
+          "specifics"
+        ],
+        "summary": "Returns list of all known allergens"
+      }
+    },
+    "/allergens/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "description": "ID of a specific allergen",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "enum": [
+              "A",
+              "B",
+              "C"
+            ]
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "specifics"
+        ],
+        "summary": "Returns information on a specific allergen"
+      }
+    },
+    "/supplements": {
+      "get": {
+        "tags": [
+          "specifics"
+        ],
+        "summary": "Returns list of all known supplements"
+      }
+    },
+    "/supplements/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "description": "ID of a specific supplement",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "enum": [
+              "A",
+              "B",
+              "C"
+            ]
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "specifics"
+        ],
+        "summary": "Returns information on a specific supplement"
+      }
+    },
+    "/menues": {
+      "get": {
+        "tags": [
+          "specifics"
+        ],
+        "summary": "Returns list of all known menues/meal categories"
+      }
+    },
+    "/meals": {
+      "get": {
+        "tags": [
+          "meals"
+        ],
+        "summary": "Query all known meals"
+      }
+    },
+    "/meals/{mealID}": {
+      "parameters": [
+        {
+          "name": "mealID",
+          "description": "ID of a specific meal",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "format": "int"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "meals"
+        ],
+        "summary": "Return information on a specific meal"
+      }
+    },
+    "/weeks/{date}": {
+      "parameters": [
+        {
+          "name": "date",
+          "description": "Date in requested week",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "plans"
+        ],
+        "summary": "Return weekly meal plan for a given date in that week",
+        "description": "Return weekly meal plan for a given date in that week"
+      }
+    },
+    "/days/{date}": {
+      "parameters": [
+        {
+          "name": "date",
+          "description": "Date in requested week",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "plans"
+        ],
+        "summary": "Return daily meal plan for a given date",
+        "description": "Return daily meal plan for a given date"
+      }
+    },
+    "/plan-range/{startDate}/{endDate}": {
+      "parameters": [
+        {
+          "name": "startDate",
+          "description": "Starting date for plan range",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        {
+          "name": "endDate",
+          "description": "Ending date for plan range",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "plans"
+        ],
+        "summary": "Return meal plan for a given date range",
+        "description": "Return meal plan for a given date range"
+      }
+    },
+    "/plans": {
+      "get": {
+        "tags": [
+          "plans"
+        ],
+        "summary": "Return meal plans for all days from today on that have a meal plan",
+        "description": "Return meal plans for all days from today on that have a meal plan"
+      }
+    },
+    "/plans/{relativeDayOffset}": {
+      "parameters": [
+        {
+          "name": "relativeDayOffset",
+          "description": "Relative day offset from today",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "format": "int",
+            "min": -999,
+            "max": 999
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "plans"
+        ],
+        "summary": "Return meal plans for all days from today until day offset",
+        "description": "Return meal plans for all days from today until day offset including future and previous days which have a meal plan"
+      }
+    },
+    "/openmensa/feed-v2": {
+      "get": {
+        "tags": [
+          "openmensa"
+        ],
+        "summary": "OpenMensa parser feed endpoint",
+        "externalDocs": {
+          "description": "Find out more about OpenMensa parser feed",
+          "url": "https://docs.openmensa.org/feed/v2/"
+        }
+      }
+    },
+    "/openmensa/api-v2/canteens": {
+      "get": {
+        "tags": [
+          "openmensa"
+        ],
+        "summary": "List all canteens"
+      }
+    },
+    "/openmensa/api-v2/canteens/{canteen_id}": {
+      "parameters": [
+        {
+          "name": "canteen_id",
+          "description": "ID of canteen",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "format": "int",
+            "enum": [
+              1
+            ]
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "openmensa"
+        ],
+        "summary": "Get a canteen"
+      }
+    },
+    "/openmensa/api-v2/canteens/{canteen_id}/days": {
+      "parameters": [
+        {
+          "name": "canteen_id",
+          "description": "ID of canteen",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "format": "int",
+            "enum": [
+              1
+            ]
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "openmensa"
+        ],
+        "summary": "List days of canteen"
+      }
+    },
+    "/openmensa/api-v2/canteens/{canteen_id}/days/{date}": {
+      "parameters": [
+        {
+          "name": "canteen_id",
+          "description": "ID of canteen",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "format": "int",
+            "enum": [
+              1
+            ]
+          }
+        },
+        {
+          "name": "date",
+          "description": "date of day",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "openmensa"
+        ],
+        "summary": "Get day of canteen"
+      }
+    },
+    "/openmensa/api-v2/canteens/{canteen_id}/days/{date}/meals": {
+      "parameters": [
+        {
+          "name": "canteen_id",
+          "description": "ID of canteen",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "format": "int",
+            "enum": [
+              1
+            ]
+          }
+        },
+        {
+          "name": "date",
+          "description": "date of day",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "openmensa"
+        ],
+        "summary": "List meals of a day in a canteen"
+      }
+    },
+    "/openmensa/api-v2/canteens/{canteen_id}/days/{date}/meals/{id}": {
+      "parameters": [
+        {
+          "name": "canteen_id",
+          "description": "ID of canteen",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "format": "int",
+            "enum": [
+              1
+            ]
+          }
+        },
+        {
+          "name": "date",
+          "description": "date of day",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        {
+          "name": "id",
+          "description": "ID of meal",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "format": "int"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "openmensa"
+        ],
+        "summary": "Get a meal"
+      }
+    }
+  }
+}
