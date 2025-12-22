@@ -10,7 +10,7 @@ info:
     url: https://opensource.org/license/osl-3-0
   version: 0.0.1
 servers:
-  - url: https://secure-gateway.schulzentrum.de/api/v1
+  - url: https://secure-gateway.schulzentrum.de/api/v1/essensplan
 tags:
   - name: plans
     description: Daily and weekly meal plans
@@ -162,6 +162,12 @@ paths:
       externalDocs:
         description: Find out more about OpenMensa parser feed
         url: https://docs.openmensa.org/feed/v2/
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/xml:
+              schema:
   /openmensa/api-v2/canteens:
     get:
       tags:
@@ -195,6 +201,15 @@ paths:
       tags:
         - openmensa
       summary: List days of canteen
+      responses: 
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/day"
   /openmensa/api-v2/canteens/{canteen_id}/days/{date}:
     parameters:
       - name: canteen_id
@@ -216,6 +231,13 @@ paths:
       tags:
         - openmensa
       summary: Get day of canteen
+      responses: 
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/day"
   /openmensa/api-v2/canteens/{canteen_id}/days/{date}/meals:
     parameters:
       - name: canteen_id
@@ -237,6 +259,15 @@ paths:
       tags:
         - openmensa
       summary: List meals of a day in a canteen
+      responses: 
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/meal"
   /openmensa/api-v2/canteens/{canteen_id}/days/{date}/meals/{id}:
     parameters:
       - name: canteen_id
@@ -265,3 +296,65 @@ paths:
       tags:
         - openmensa
       summary: Get a meal
+      responses: 
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/meal"
+components:
+  schemas:
+    meal:
+      type: object
+      properties:
+        id: 
+          type: integer
+        name: 
+          type: string
+        notes: 
+          type: array
+          minItems: 0
+          items:
+            type: string
+        prices:
+          type: object
+          properties:
+            pupils:
+              optional: true
+              type: number
+            students:
+              optional: true
+              type: number
+            employees:
+              optional: true
+              type: number
+            others:
+              optional: true
+              type: number
+        category:
+          type: string
+    day:
+      type: object
+      properties:
+        date:
+          type: string
+        closed:
+          type: boolean
+    canteen:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        city:
+          type: string
+        address:
+          type: string
+        coordinates:
+          type: array
+          items:
+            type: number
+          minItems: 2
+          maxItems: 2
