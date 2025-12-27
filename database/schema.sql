@@ -17,9 +17,9 @@ CREATE TABLE IF NOT EXISTS allergens (
     name VARCHAR(80) NOT NULL
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED KEY_BLOCK_SIZE=4;
 
--- Supplements master list
+-- Supplements master list (Zusatzstoffe)
 CREATE TABLE IF NOT EXISTS supplements (
-    id CHAR(1) PRIMARY KEY,
+    id CHAR(2) PRIMARY KEY,
     name VARCHAR(60) NOT NULL
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED KEY_BLOCK_SIZE=4;
 
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS meal_allergens (
 -- Meal supplements (junction table)
 CREATE TABLE IF NOT EXISTS meal_supplements (
     meal_id MEDIUMINT UNSIGNED,
-    supplement_id CHAR(1),
+    supplement_id CHAR(2),
     PRIMARY KEY (meal_id, supplement_id),
     FOREIGN KEY (meal_id) REFERENCES meals(id) ON DELETE CASCADE,
     FOREIGN KEY (supplement_id) REFERENCES supplements(id) ON DELETE CASCADE
@@ -77,31 +77,37 @@ INSERT IGNORE INTO categories (name) VALUES
 ('Menü 3 (veg)'),
 ('Salatteller');
 
--- Sample allergens (German standard)
+-- Sample allergens (German standard, matching source API)
 INSERT IGNORE INTO allergens (id, name) VALUES
-('A', 'Glutenhaltiges Getreide'),
+('A', 'Glutenhaltige Getreide'),
 ('B', 'Krebstiere'),
-('C', 'Eier'),
-('D', 'Fisch'),
-('E', 'Erdnüsse'),
-('F', 'Soja'),
-('G', 'Milch/Laktose'),
+('C', 'Eier- und Eiererzeugnisse'),
+('D', 'Fisch- und Fischerzeugnisse'),
+('E', 'Erdnüsse und Erdnusserzeugnisse'),
+('F', 'Soja und Sojaerzeugnisse'),
+('G', 'Milch und Milcherzeugnisse'),
 ('H', 'Schalenfrüchte'),
-('L', 'Sellerie'),
-('M', 'Senf'),
-('N', 'Sesamsamen'),
-('O', 'Schwefeldioxid/Sulfite'),
-('P', 'Lupinen'),
-('R', 'Weichtiere');
+('I', 'Sellerie und Sellerieerzeugnisse'),
+('J', 'Senf und Senferzeugnisse'),
+('K', 'Sesamsamen'),
+('L', 'Schwefeldioxid und Sulfite'),
+('M', 'Lupinen'),
+('N', 'Weichtiere');
 
--- Sample supplements
+-- Sample supplements (Zusatzstoffe, matching source API)
 INSERT IGNORE INTO supplements (id, name) VALUES
-('1', 'mit Farbstoff'),
-('2', 'mit Konservierungsstoff'),
-('3', 'mit Antioxidationsmittel'),
-('4', 'mit Geschmacksverstärker'),
-('5', 'geschwefelt'),
-('6', 'geschwärzt'),
-('7', 'gewachst'),
+('1', 'mit Konservierungsstoff'),
+('2', 'mit Farbstoff'),
+('3', 'mit Antioxydationsmittel'),
+('4', 'mit Süßungsmittel Saccarin'),
+('5', 'mit Süßungsmittel Cyclamat'),
+('6', 'mit Süßungsmittel Aspartam'),
+('7', 'mit Süßungsmittel Acesulfam'),
 ('8', 'mit Phosphat'),
-('9', 'mit Süßungsmittel');
+('9', 'geschwefelt'),
+('10', 'chininhaltig'),
+('11', 'coffeinhaltig'),
+('12', 'mit Geschmacksverstärker'),
+('13', 'geschwärzt'),
+('14', 'gewachst'),
+('15', 'mit Schweinefleisch');
