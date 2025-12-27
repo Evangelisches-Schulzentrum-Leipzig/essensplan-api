@@ -318,6 +318,9 @@ components:
           items:
             type: string
         prices:
+          description: >
+            Prices for different groups, which will be all the same because
+            we don't differentiate the groups.
           type: object
           properties:
             pupils:
