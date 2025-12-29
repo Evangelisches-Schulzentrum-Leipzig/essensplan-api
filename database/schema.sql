@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS supplements (
 -- Meals/dishes
 CREATE TABLE IF NOT EXISTS meals (
     id MEDIUMINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(160) NOT NULL,
+    name VARCHAR(160) NOT NULL UNIQUE,
     dietary_flags TINYINT UNSIGNED DEFAULT 0 COMMENT 'Bit 0: vegetarian, Bit 1: vegan, Bit 2: gluten-free',
     created_date DATE DEFAULT (CURDATE()),
     KEY idx_dietary (dietary_flags),
@@ -51,12 +51,6 @@ CREATE TABLE IF NOT EXISTS meal_supplements (
     FOREIGN KEY (supplement_id) REFERENCES supplements(id) ON DELETE CASCADE
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED KEY_BLOCK_SIZE=4;
 
--- Closed dates for the canteen
-CREATE TABLE IF NOT EXISTS closed_dates (
-    date DATE PRIMARY KEY,
-    reason VARCHAR(150)
-) ENGINE=InnoDB ROW_FORMAT=COMPRESSED KEY_BLOCK_SIZE=4;
-
 -- Meals scheduled for specific dates with pricing
 CREATE TABLE IF NOT EXISTS plan_meals (
     date DATE NOT NULL,
@@ -70,12 +64,33 @@ CREATE TABLE IF NOT EXISTS plan_meals (
     KEY idx_category (category_id)
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED KEY_BLOCK_SIZE=8;
 
+-- Plan metadata
+CREATE TABLE IF NOT EXISTS plan_metadata (
+    date DATE PRIMARY KEY,
+    holiday BOOLEAN DEFAULT FALSE,
+    notes TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB ROW_FORMAT=COMPRESSED KEY_BLOCK_SIZE=4;
+
+-- API metadata
+CREATE TABLE IF NOT EXISTS api_metadata (
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    hash VARCHAR(64) NOT NULL,
+    PRIMARY KEY (start_date, end_date),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB ROW_FORMAT=COMPRESSED KEY_BLOCK_SIZE=4;
+
 -- Sample categories
-INSERT IGNORE INTO categories (name) VALUES
-('Menü 1'),
-('Menü 2'),
-('Menü 3 (veg)'),
-('Salatteller');
+INSERT IGNORE INTO categories (id, name) VALUES
+(1, 'Menü 1'),
+(2, 'Menü 2'),
+(3, 'veg. Menü 3'),
+(4, 'Salatteller'),
+(5, 'Milch'),
+(6, 'Glutenfrei'),
+(7, 'N/A');
 
 -- Sample allergens (German standard, matching source API)
 INSERT IGNORE INTO allergens (id, name) VALUES
