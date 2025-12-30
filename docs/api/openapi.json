@@ -10,9 +10,12 @@
       "name": "Open Source License 3.0",
       "url": "https://opensource.org/license/osl-3-0"
     },
-    "version": "0.0.1"
+    "version": "0.9.1"
   },
   "servers": [
+    {
+      "url": "http://localhost"
+    },
     {
       "url": "https://secure-gateway.schulzentrum.de/api/v1/essensplan"
     }
@@ -45,7 +48,25 @@
         "tags": [
           "specifics"
         ],
-        "summary": "Returns list of all known allergens"
+        "summary": "Returns list of all known allergens",
+        "responses": {
+          "200": {
+            "description": "List of all allergens",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Allergen"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
       }
     },
     "/allergens/{id}": {
@@ -69,7 +90,25 @@
         "tags": [
           "specifics"
         ],
-        "summary": "Returns information on a specific allergen"
+        "summary": "Returns information on a specific allergen",
+        "responses": {
+          "200": {
+            "description": "Allergen details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Allergen"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
       }
     },
     "/supplements": {
@@ -77,7 +116,25 @@
         "tags": [
           "specifics"
         ],
-        "summary": "Returns list of all known supplements"
+        "summary": "Returns list of all known supplements",
+        "responses": {
+          "200": {
+            "description": "List of all supplements",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Supplement"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
       }
     },
     "/supplements/{id}": {
@@ -101,7 +158,25 @@
         "tags": [
           "specifics"
         ],
-        "summary": "Returns information on a specific supplement"
+        "summary": "Returns information on a specific supplement",
+        "responses": {
+          "200": {
+            "description": "Supplement details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Supplement"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
       }
     },
     "/menues": {
@@ -109,7 +184,25 @@
         "tags": [
           "specifics"
         ],
-        "summary": "Returns list of all known menues/meal categories"
+        "summary": "Returns list of all known menues/meal categories",
+        "responses": {
+          "200": {
+            "description": "List of all menu categories",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Category"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
       }
     },
     "/meals": {
@@ -117,7 +210,25 @@
         "tags": [
           "meals"
         ],
-        "summary": "Query all known meals"
+        "summary": "Query all known meals",
+        "responses": {
+          "200": {
+            "description": "List of all meals",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Meal"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
       }
     },
     "/meals/{mealID}": {
@@ -137,7 +248,25 @@
         "tags": [
           "meals"
         ],
-        "summary": "Return information on a specific meal"
+        "summary": "Return information on a specific meal",
+        "responses": {
+          "200": {
+            "description": "Meal details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Meal"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
       }
     },
     "/weeks/{date}": {
@@ -158,7 +287,22 @@
           "plans"
         ],
         "summary": "Return weekly meal plan for a given date in that week",
-        "description": "Return weekly meal plan for a given date in that week"
+        "description": "Return weekly meal plan for a given date in that week",
+        "responses": {
+          "200": {
+            "description": "Weekly meal plan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DateRangePlan"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
       }
     },
     "/days/{date}": {
@@ -179,7 +323,25 @@
           "plans"
         ],
         "summary": "Return daily meal plan for a given date",
-        "description": "Return daily meal plan for a given date"
+        "description": "Return daily meal plan for a given date",
+        "responses": {
+          "200": {
+            "description": "Daily meal plan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DailyPlanEntry"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
       }
     },
     "/plan-range/{startDate}/{endDate}": {
@@ -210,7 +372,22 @@
           "plans"
         ],
         "summary": "Return meal plan for a given date range",
-        "description": "Return meal plan for a given date range"
+        "description": "Return meal plan for a given date range",
+        "responses": {
+          "200": {
+            "description": "Meal plan for the date range",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DateRangePlan"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
       }
     },
     "/plans": {
@@ -219,7 +396,22 @@
           "plans"
         ],
         "summary": "Return meal plans for all days from today on that have a meal plan",
-        "description": "Return meal plans for all days from today on that have a meal plan"
+        "description": "Return meal plans for all days from today on that have a meal plan",
+        "responses": {
+          "200": {
+            "description": "Meal plans from today onwards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DateRangePlan"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
       }
     },
     "/plans/{relativeDayOffset}": {
@@ -242,7 +434,32 @@
           "plans"
         ],
         "summary": "Return meal plans for all days from today until day offset",
-        "description": "Return meal plans for all days from today until day offset including future and previous days which have a meal plan"
+        "description": "Return meal plans for all days from today until day offset including future and previous days which have a meal plan",
+        "responses": {
+          "200": {
+            "description": "Meal plans for the offset range",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DateRangePlan"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid relativeDayOffset",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
       }
     },
     "/openmensa/feed-v2": {
@@ -486,7 +703,167 @@
     }
   },
   "components": {
+    "responses": {
+      "InternalServerError": {
+        "description": "Internal Server Error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    },
     "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "error"
+        ]
+      },
+      "Allergen": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "Supplement": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "Category": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "Meal": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "dietary": {
+            "type": "string",
+            "description": "Comma-separated dietary labels (vegetarian, vegan, gluten-free)"
+          },
+          "allergens": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Allergen"
+            }
+          },
+          "supplements": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Supplement"
+            }
+          },
+          "created_date": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "dietary",
+          "allergens",
+          "supplements",
+          "created_date"
+        ]
+      },
+      "DailyPlanEntry": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "$ref": "#/components/schemas/Category"
+          },
+          "meal": {
+            "$ref": "#/components/schemas/Meal"
+          },
+          "displayOrder": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "category",
+          "meal",
+          "displayOrder"
+        ]
+      },
+      "DateRangePlanEntry": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "category": {
+            "$ref": "#/components/schemas/Category"
+          },
+          "meal": {
+            "$ref": "#/components/schemas/Meal"
+          },
+          "displayOrder": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "date",
+          "category",
+          "meal",
+          "displayOrder"
+        ]
+      },
+      "DateRangePlan": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/DateRangePlanEntry"
+          }
+        },
+        "description": "Object with date strings as keys (YYYY-MM-DD format) and arrays of meal plan entries as values"
+      },
       "meal": {
         "type": "object",
         "properties": {
@@ -504,6 +881,7 @@
             }
           },
           "prices": {
+            "description": "Prices for different groups, which will be all the same because we don't differentiate the groups.\n",
             "type": "object",
             "properties": {
               "pupils": {
