@@ -7,7 +7,7 @@ import { queryAllergens, querySupplements, queryMeals, queryMenues, queryDailyPl
 config();
 
 const app = express()
-const port = process.env.API_PORT || 80;
+const port = process.env['API_PORT'] || 80;
 
 app.use(cors())
 

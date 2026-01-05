@@ -72,12 +72,12 @@ let pool: Pool | null = null;
 function getPool(): Pool {
     if (!pool) {
         pool = mariadb.createPool({
-            host: process.env.DB_HOST || '',
-            port: Number(process.env.DB_PORT) || 3306,
-            user: process.env.DB_USER || '',
-            password: process.env.DB_PASSWORD || '',
-            database: process.env.DB_DATABASE || '',
-            connectionLimit: Number(process.env.DB_CONNECTION_LIMIT) || 10,
+            host: process.env['DB_HOST'] || '',
+            port: Number(process.env['DB_PORT']) || 3306,
+            user: process.env['DB_USER'] || '',
+            password: process.env['DB_PASSWORD'] || '',
+            database: process.env['DB_DATABASE'] || '',
+            connectionLimit: Number(process.env['DB_CONNECTION_LIMIT']) || 10,
             bigIntAsNumber: true,
         });
     }
@@ -104,19 +104,19 @@ async function fetchSpeiseplanData({ dateStart, dateEnd, etag }: {dateStart: Dat
         command: 'speiseplan/mandantAPI_1_5',
         client: 'web',
         parameter: {
-            mandantId: process.env.API_MANDANT_ID,
-            speiseplanNr: process.env.API_SPEISEPLAN_NR,
+            mandantId: process.env['API_MANDANT_ID'],
+            speiseplanNr: process.env['API_SPEISEPLAN_NR'],
             von: formatDate(dateStart),
             bis: formatDate(dateEnd),
         },
     };
 
-    const response = await fetch(process.env.API_REQUEST_URL || '', {
+    const response = await fetch(process.env['API_REQUEST_URL'] || '', {
         method: 'POST',
         headers: {
             'Accept': 'application/json, text/javascript, */*',
             'Content-Type': 'application/json',
-            'Referer': process.env.API_REFERRER_URL || '',
+            'Referer': process.env['API_REFERRER_URL'] || '',
             'If-None-Match': etag || '',
         },
         body: JSON.stringify(requestBody),
@@ -412,7 +412,9 @@ export async function fetchAndImportRange(startDate: Date, endDate: Date): Promi
     );
     const lastEtag = rows.length > 0 ? rows[0].hash : undefined;
 
-    const response = await fetchSpeiseplanData({ dateStart: startDate, dateEnd: endDate, etag: lastEtag });
+    var eTagOptions = lastEtag ? { etag: lastEtag } : {};
+    var options = { dateStart: startDate, dateEnd: endDate, ...eTagOptions };
+    const response = await fetchSpeiseplanData(options);
     // If-None-Match not correctly working, so we manually check etag
     if (response === null || lastEtag === response.etag) {
         conn.release();
