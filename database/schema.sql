@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS plan_meals (
     price DECIMAL(4,2),
     display_order TINYINT UNSIGNED DEFAULT 0,
     PRIMARY KEY (date, meal_id),
+    FOREIGN KEY (date) REFERENCES plan_metadata(date) ON DELETE CASCADE,
     FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL,
     FOREIGN KEY (meal_id) REFERENCES meals(id) ON DELETE CASCADE,
     KEY idx_category (category_id)
@@ -81,6 +82,28 @@ CREATE TABLE IF NOT EXISTS api_metadata (
     PRIMARY KEY (start_date, end_date),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB ROW_FORMAT=COMPRESSED KEY_BLOCK_SIZE=4;
+
+CREATE VIEW IF NOT EXISTS daily_plan AS
+SELECT 
+    plan_metadata.date, 
+    plan_metadata.holiday, 
+    plan_metadata.notes,
+    categories.id as category_id, 
+    categories.name as category_name, 
+    meals.id as meal_id, 
+    meals.name, 
+    meals.dietary_flags, 
+    meals.created_date, 
+    plan_metadata.updated_at, 
+    plan_meals.price,
+    plan_meals.display_order 
+FROM `plan_metadata` 
+    LEFT JOIN plan_meals ON plan_meals.date = plan_metadata.date 
+    LEFT JOIN meals ON meals.id = plan_meals.meal_id 
+    LEFT JOIN categories ON categories.id = plan_meals.category_id 
+ORDER BY
+    plan_metadata.date DESC, 
+    plan_meals.display_order ASC;
 
 -- Sample categories
 INSERT IGNORE INTO categories (id, name) VALUES
