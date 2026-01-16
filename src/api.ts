@@ -94,6 +94,10 @@ app.get('/meals/:id', async (req, res) => {
 
 app.get('/days/:date', async (req, res) => {
     const { date } = req.params;
+    if (!/[0-9]{4}-[0-9]{2}-[0-9]{2}/g.test(date)) {
+        res.status(400).json({ error: 'Invalid date format. Expected YYYY-MM-DD', type: "invalid_date_format" });
+        return;
+    }
     try {
         const result = await queryDailyPlan(date);
         res.json(result);
@@ -105,6 +109,18 @@ app.get('/days/:date', async (req, res) => {
 
 app.get('/plan-range/:startDate/:endDate', async (req, res) => {
     const { startDate, endDate } = req.params;
+    if (!/[0-9]{4}-[0-9]{2}-[0-9]{2}/g.test(startDate) || !/[0-9]{4}-[0-9]{2}-[0-9]{2}/g.test(endDate)) {
+        res.status(400).json({ error: 'Invalid date format. Expected YYYY-MM-DD', type: "invalid_date_format" });
+        return;
+    }
+    if (new Date(startDate) > new Date(endDate)) {
+        res.status(400).json({ error: 'startDate must be before or equal to endDate', type: "invalid_date_range" });
+        return;
+    }
+    if (Math.abs(new Date(startDate).getTime() - new Date(endDate).getTime()) > 999 * 24 * 60 * 60 * 1000) {
+        res.status(400).json({ error: 'Date range is above the allowed limit of 999 days', type: "range_limit_exceeded" });
+        return;
+    }
     try {
         const result = await queryDateRangeMenues(startDate, endDate);
         res.json(result);
@@ -116,6 +132,10 @@ app.get('/plan-range/:startDate/:endDate', async (req, res) => {
 
 app.get('/weeks/:date', async (req, res) => {
     const { date } = req.params;
+    if (!/[0-9]{4}-[0-9]{2}-[0-9]{2}/g.test(date)) {
+        res.status(400).json({ error: 'Invalid date format. Expected YYYY-MM-DD', type: "invalid_date_format" });
+        return;
+    }
     var [start_date, end_date] = ((date: string) => {
         const d = new Date(date);
         const day = d.getDay();
@@ -147,7 +167,7 @@ app.get('/plans', async (req, res) => {
 app.get('/plans/:relativeDayOffset', async (req, res) => {
     const { relativeDayOffset } = req.params;
     if (Math.abs(Number(relativeDayOffset)) > 999) {
-        res.status(400).json({ error: 'relativeDayOffset is out of range' });
+        res.status(400).json({ error: 'relativeDayOffset is out of range', type: "range_limit_exceeded" });
         return;
     }
     try {
@@ -163,6 +183,18 @@ app.get('/plans/:relativeDayOffset', async (req, res) => {
 
 app.get('/query/:startDate/:endDate', async (req, res) => {
     const { startDate, endDate } = req.params;
+    if (!/[0-9]{4}-[0-9]{2}-[0-9]{2}/g.test(startDate) || !/[0-9]{4}-[0-9]{2}-[0-9]{2}/g.test(endDate)) {
+        res.status(400).json({ error: 'Invalid date format. Expected YYYY-MM-DD', type: "invalid_date_format" });
+        return;
+    }
+    if (new Date(startDate) > new Date(endDate)) {
+        res.status(400).json({ error: 'startDate must be before or equal to endDate', type: "invalid_date_range" });
+        return;
+    }
+    if (Math.abs(new Date(startDate).getTime() - new Date(endDate).getTime()) > 356 * 24 * 60 * 60 * 1000) {
+        res.status(400).json({ error: 'Date range is above the allowed limit of 356 days', type: "range_limit_exceeded" });
+        return;
+    }
     try {
         const result = await fetchAndImportRange(new Date(startDate), new Date(endDate));
         res.json(result);
