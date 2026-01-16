@@ -151,3 +151,23 @@ export async function queryDateRangeMenues(startDate: string, endDate: string | 
         conn.release();
     }
 };
+
+export async function queryDaysDatesOfYear(year: number) : Promise<string[]> {
+    const conn = await getPool().getConnection();
+    try {
+        let rows = await conn.query('SELECT DISTINCT date FROM plan_metadata WHERE YEAR(date) = ?', [year]);
+        return Array.isArray(rows) ? rows.map(row => row.date.toISOString().split('T')[0]) : [];
+    } finally {
+        conn.release();
+    }
+};
+
+export async function queryAvailableYears() : Promise<number[]> {
+    const conn = await getPool().getConnection();
+    try {
+        let rows = await conn.query('SELECT DISTINCT YEAR(date) as year FROM plan_metadata ORDER BY year ASC');
+        return Array.isArray(rows) ? rows.map(row => row.year) : [];
+    } finally {
+        conn.release();
+    }
+};

@@ -2,7 +2,7 @@ import { config } from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 import { fetchAndImportRange } from './query.js';
-import { queryAllergens, querySupplements, queryMeals, queryMenues, queryDailyPlan, queryDateRangeMenues } from './db.js';
+import { queryAllergens, querySupplements, queryMeals, queryMenues, queryDailyPlan, queryDateRangeMenues, queryDaysDatesOfYear, queryAvailableYears } from './db.js';
 
 config();
 
@@ -174,6 +174,27 @@ app.get('/plans/:relativeDayOffset', async (req, res) => {
         const targetDate = new Date();
         targetDate.setDate(targetDate.getDate() + Number(relativeDayOffset));
         const result = await queryDateRangeMenues(targetDate.toLocaleDateString("lt-LT"));
+        res.json(result);
+    } catch (error) {
+        console.error((error as Error).message, (error as Error).stack);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+app.get('/available-days/:year', async (req, res) => {
+    const { year } = req.params;
+    try {
+        const result = await queryDaysDatesOfYear(parseInt(year));
+        res.json(result);
+    } catch (error) {
+        console.error((error as Error).message, (error as Error).stack);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+app.get('/years', async (req, res) => {
+    try {
+        const result = await queryAvailableYears();
         res.json(result);
     } catch (error) {
         console.error((error as Error).message, (error as Error).stack);

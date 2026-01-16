@@ -19,6 +19,8 @@ tags:
     description: Information about meals
   - name: specifics
     description: More information on details like allergens and supplements
+  - name: metadata
+    description: Metadata information like available years
   - name: openmensa
     description: Endpoints that are compatibil with OpenMensa APIs
     externalDocs:
@@ -301,6 +303,47 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /available-days/{year}:
+    parameters:
+      - name: year
+        description: Year for which available dates are requested
+        in: path
+        required: true
+        schema: 
+          type: integer
+          format: integer
+    get:
+      tags:
+        - metadata
+      summary: Returns list of dates for which meal plans are available in a given year
+      responses:
+        "200":
+          description: List of available dates in the given year
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  format: date
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /years:
+    get:
+      tags:
+        - metadata
+      summary: Returns list of years for which meal plans are available
+      responses:
+        "200":
+          description: List of available years
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: integer
         "500":
           $ref: "#/components/responses/InternalServerError"
   /openmensa/feed-v2:
