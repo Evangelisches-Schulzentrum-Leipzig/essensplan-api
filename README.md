@@ -11,20 +11,13 @@ Including full OpenAPI documentation.
 - OpenMensa-compatible endpoints
 - OpenAPI/Swagger UI documentation
 
-## Tech Stack
-
-- **Runtime:** Node.js
-- **Framework:** Express.js
-- **Language:** TypeScript
-- **Database:** MariaDB
-
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js
-- TypeScript Compiler
-- MariaDB database
+- [Node.js](https://nodejs.org/en/download)
+- [TypeScript Compiler](https://www.typescriptlang.org/download/)
+- [MariaDB database](https://mariadb.org/download/)
 
 ### Installation
 
@@ -37,8 +30,8 @@ Including full OpenAPI documentation.
    ```bash
    npm install -D 
    ```
-3. Set up the database using the schema in `database/schema.sql`
-4. Create a `.env` file based on the `.env.example` file.
+3. Set up the database using the schema in [`/database/schema.sql`](/database/schema.sql)
+4. Create a `.env` file based on the [`.env.example`](/.env.example) file.
 
 ### Running the API
 
@@ -56,7 +49,7 @@ npm start
 ## API Documentation
 
 Once the server is running, access the Swagger UI at `/swagger` or the OpenAPI spec at `/openapi.yaml`.  
-The file is also located at `/docs/api/openapi.yaml` or `/docs/api/openapi.json`.
+The file is also located at [`/docs/api/openapi.yaml`](/docs/api/openapi.yaml) or [`/docs/api/openapi.json`](/docs/api/openapi.json).
 
 ## Contributing
 
