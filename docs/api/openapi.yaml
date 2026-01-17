@@ -2,13 +2,15 @@ openapi: 3.1.0
 info:
   title: Essensplan API
   description: |-
+    API for meal plan data of the canteen at the Evangelisches Schulzentrum Leipzig.
     
+    **OpenMensa** compatible endpoints for v2.1 feed format and the API v2 are available.
   contact:
     email: support@schulzentrum.de
   license:
     name: Open Source License 3.0
     url: https://opensource.org/license/osl-3-0
-  version: 0.9.1
+  version: 1.0.0
 servers:
   - url: http://localhost
   - url: https://secure-gateway.schulzentrum.de/api/v1/essensplan
