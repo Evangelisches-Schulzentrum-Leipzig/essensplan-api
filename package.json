@@ -18,7 +18,8 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
-    "mariadb": "^3.2.0"
+    "mariadb": "^3.2.0",
+    "xmlbuilder2": "^4.0.3"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",

@@ -205,7 +205,8 @@ app.get('/years', async (req, res) => {
 
 app.get('/openmensa/feed-v2', async (req, res) => {
     try {
-        res.json((await getFeedV2()))
+        res.set('Content-Type', 'text/xml');
+        res.send((await getFeedV2()))
     } catch (error) {
         console.error((error as Error).message, (error as Error).stack);
         res.status(500).json({ error: 'Internal Server Error' });
