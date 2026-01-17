@@ -351,6 +351,7 @@ paths:
       tags: 
         - openmensa
       summary: OpenMensa parser feed endpoint
+      description: Returns OpenMensa v2.1 compatible XML feed with canteen information and meal plans
       externalDocs:
         description: Find out more about OpenMensa parser feed
         url: https://docs.openmensa.org/feed/v2/
@@ -360,6 +361,167 @@ paths:
           content:
             application/xml:
               schema:
+                type: object
+                xml:
+                  name: openmensa
+                  namespace: http://openmensa.org/open-mensa-v2
+                properties:
+                  version:
+                    type: string
+                    description: Feed version
+                    examples: ["1.0.0"]
+                  canteen:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        examples: [Mensa Evangelisches Schulzentrum Leipzig]
+                      address:
+                        type: string
+                        examples: ["Schletterstraße 7, 04107 Leipzig, Deutschland"]
+                      city:
+                        type: string
+                        examples: [Leipzig]
+                      location:
+                        type: object
+                        properties:
+                          latitude:
+                            type: string
+                            xml:
+                              attribute: true
+                            examples: ["51.3303829274839"]
+                          longitude:
+                            type: string
+                            xml:
+                              attribute: true
+                            examples: ["12.377177720801583"]
+                      availability:
+                        type: string
+                        examples: ["restricted", "public"]
+                      times:
+                        type: object
+                        properties:
+                          type:
+                            type: string
+                            xml:
+                              attribute: true
+                            examples: ["opening"]
+                          monday:
+                            type: object
+                            properties:
+                              open:
+                                type: string
+                                xml:
+                                  attribute: true
+                                examples: ["09:15-14:00"]
+                          tuesday:
+                            type: object
+                            properties:
+                              open:
+                                type: string
+                                xml:
+                                  attribute: true
+                                examples: ["09:15-14:00"]
+                          wednesday:
+                            type: object
+                            properties:
+                              open:
+                                type: string
+                                xml:
+                                  attribute: true
+                                examples: ["09:15-14:00"]
+                          thursday:
+                            type: object
+                            properties:
+                              open:
+                                type: string
+                                xml:
+                                  attribute: true
+                                examples: ["09:15-14:00"]
+                          friday:
+                            type: object
+                            properties:
+                              open:
+                                type: string
+                                xml:
+                                  attribute: true
+                                examples: ["09:15-14:00"]
+                          saturday:
+                            type: object
+                            properties:
+                              closed:
+                                type: string
+                                xml:
+                                  attribute: true
+                                examples: ["true"]
+                          sunday:
+                            type: object
+                            properties:
+                              closed:
+                                type: string
+                                xml:
+                                  attribute: true
+                                examples: ["true"]
+                      day:
+                        type: array
+                        items:
+                          type: object
+                          xml:
+                            name: day
+                          properties:
+                            date:
+                              type: string
+                              xml:
+                                attribute: true
+                              format: date
+                              examples: ["2025-12-15", "2026-01-17"]
+                            category:
+                              type: array
+                              items:
+                                type: object
+                                xml:
+                                  name: category
+                                properties:
+                                  name:
+                                    type: string
+                                    xml:
+                                      attribute: true
+                                    examples: ["Menü 1", "Menü 2", "veg. Menü 3", "Glutenfrei"]
+                                  meal:
+                                    type: array
+                                    items:
+                                      type: object
+                                      xml:
+                                        name: meal
+                                      properties:
+                                        name:
+                                          type: string
+                                          examples: ["Rührei mit Rahmspinat und Salzkartoffeln"]
+                                        note:
+                                          type: array
+                                          items:
+                                            type: string
+                                            examples: ["Glutenhaltige Getreide", "Eier- und Eiererzeugnisse"]
+                                        price:
+                                          type: array
+                                          items:
+                                            type: object
+                                            properties:
+                                              role:
+                                                type: string
+                                                xml:
+                                                  attribute: true
+                                                enum: [pupils, other]
+                                              name:
+                                                type: number
+                                                xml:
+                                                  name: "#content"
+                                                examples: [1.20]
+                            closed:
+                              type: boolean
+                              description: Only without categories and meals when canteen is closed that day
+                              xml:
+                                name: closed
         "500":
           $ref: "#/components/responses/InternalServerError"
   /openmensa/api-v2/canteens:
