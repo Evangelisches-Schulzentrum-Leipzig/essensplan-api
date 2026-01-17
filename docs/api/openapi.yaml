@@ -360,11 +360,24 @@ paths:
           content:
             application/xml:
               schema:
+        "500":
+          $ref: "#/components/responses/InternalServerError"
   /openmensa/api-v2/canteens:
     get:
       tags:
         - openmensa
       summary: List all canteens
+      responses:
+        "200":
+          description: List of all canteens
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/canteen"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
   /openmensa/api-v2/canteens/{canteen_id}:
     parameters:
       - name: canteen_id
@@ -379,6 +392,21 @@ paths:
       tags:
         - openmensa
       summary: Get a canteen
+      responses:
+        "200":
+          description: Canteen details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/canteen"
+        "404":
+          description: Unknown canteen
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
   /openmensa/api-v2/canteens/{canteen_id}/days:
     parameters:
       - name: canteen_id
@@ -389,6 +417,13 @@ paths:
           type: integer
           format: int
           enum: [1]
+      - name: start
+        description: Optional start date for filtering
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
     get:
       tags:
         - openmensa
@@ -402,6 +437,20 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/day"
+        "400":
+          description: Invalid date format
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Unknown canteen
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
   /openmensa/api-v2/canteens/{canteen_id}/days/{date}:
     parameters:
       - name: canteen_id
@@ -425,11 +474,25 @@ paths:
       summary: Get day of canteen
       responses: 
         "200":
-          description: "OK"
+          description: Day information
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/day"
+        "400":
+          description: Invalid date format
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Unknown canteen
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
   /openmensa/api-v2/canteens/{canteen_id}/days/{date}/meals:
     parameters:
       - name: canteen_id
@@ -460,6 +523,20 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/meal"
+        "400":
+          description: Invalid date format
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Unknown canteen
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
   /openmensa/api-v2/canteens/{canteen_id}/days/{date}/meals/{id}:
     parameters:
       - name: canteen_id
@@ -495,6 +572,20 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/meal"
+        "400":
+          description: Invalid date format
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Unknown canteen
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 components:
   responses:
     InternalServerError:
@@ -515,6 +606,7 @@ components:
             - invalid_date_format
             - invalid_date_range
             - range_limit_exceeded
+            - unknown_canteen
       required:
         - error
     Allergen:

@@ -171,3 +171,28 @@ export async function queryAvailableYears() : Promise<number[]> {
         conn.release();
     }
 };
+
+export async function queryDays(startDate: string | undefined = undefined): Promise<{date: string, holiday: boolean}[]> {
+    const conn = await getPool().getConnection();
+    try {
+        let rows = await conn.query('SELECT DISTINCT date, holiday FROM plan_metadata' + (startDate ? ' WHERE date >= ?' : ''), startDate ? [startDate] : []);
+        return Array.isArray(rows) ? rows.map(row => ({date: row.date.toLocaleDateString("lt-LT"), holiday: row.holiday == 1})) : [];
+    } finally {
+        conn.release();
+    }
+}
+
+export async function queryDay(date: string): Promise<{date: string, holiday: boolean} | null> {
+    const conn = await getPool().getConnection();
+    try {
+        let rows = await conn.query('SELECT date, holiday FROM plan_metadata WHERE date = ?', [date]);
+        if (Array.isArray(rows) && rows.length > 0) {
+            let row = rows[0];
+            return {date: row.date.toLocaleDateString("lt-LT"), holiday: row.holiday == 1};
+        } else {
+            return null;
+        }
+    } finally {
+        conn.release();
+    }
+}
