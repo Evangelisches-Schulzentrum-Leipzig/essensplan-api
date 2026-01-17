@@ -5,11 +5,11 @@ Including full OpenAPI documentation.
 
 ## Features
 
-- Query allergens and supplements information
-- Retrieve meal details with dietary information (vegetarian, vegan, gluten-free)
-- Access daily, weekly, and custom date range meal plans
-- OpenMensa-compatible endpoints
-- OpenAPI/Swagger UI documentation
+- Comprehensive meal data with allergens and supplements
+- Flexible meal plans (daily, weekly, custom date ranges)
+- Possible automated data synchronization with cron jobs
+- OpenMensa v2.1 feed support and OpenMensa v2 API endpoints
+- Interactive Swagger UI and OpenAPI 3.1.0 specification
 
 ## Getting Started
 
@@ -46,11 +46,13 @@ npm run build
 npm start
 ```
 
+The API will start on the port specified in your `.env` file (default: 80).
+
 ### Querying the Data Source
 
-The API supports two methods for querying and syncing meal plan data from the external data source:
+The API supports two methods for querying and syncing meal plan data from the external source:
 
-#### 1. Manual Query via API Endpoint
+#### Option 1: Manual Query via HTTP API
 
 Use the `/query/:startDate/:endDate` endpoint to fetch and import meal plans for a specific date range:
 
@@ -59,15 +61,23 @@ GET /query/2024-01-15/2024-01-31
 ```
 
 **Parameters:**
-- `startDate` (required): Start date in YYYY-MM-DD format
-- `endDate` (required): End date in YYYY-MM-DD format
-- Maximum range: 356 days
+- `startDate` (path, required): Start date in YYYY-MM-DD format
+- `endDate` (path, required): End date in YYYY-MM-DD format
+- **Maximum range:** 356 days
 
-**Response:** Returns the HTTP status code 200 on success and the statistics of the import process.
+**Response (200 OK):**
+```json
+{ "daysProcessed": 10, "mealsInserted": 80, "planMealsInserted": 80 }
+```
 
-#### 2. Automated Scheduled Sync with Cron Job
+**Use cases:**
+- Manual data refresh during development
+- On-demand imports triggered by external systems
+- One-time historical data imports
 
-For continuous data updates, use the `query-worker.ts` script with a cron job scheduler:
+#### Option 2: Automated Scheduled Sync (Recommended for Production)
+
+Use the `query-worker.ts` script with a system cron job for automatic periodic updates:
 
 **Setup:**
 1. Compile the worker script:
@@ -75,9 +85,9 @@ For continuous data updates, use the `query-worker.ts` script with a cron job sc
    npm run build
    ```
 
-2. Add to your cron schedule (example: daily at 2 AM):
+2. Add to your system crontab (example: daily at 2 AM):
    ```cron
-   0 2 * * * cd /path/to/essensplan-api && node ./dist/query-worker.js
+   0 2 * * * cd /path/to/essensplan-api && node ./dist/query-worker.js >> /var/log/essensplan-worker.log 2>&1
    ```
 
 **What it does:**
@@ -89,19 +99,18 @@ For continuous data updates, use the `query-worker.ts` script with a cron job sc
 The worker uses the same `fetchAndImportRange()` function as the API endpoint, ensuring consistent data handling.
 
 **Example output:**
-```
+```bash
 Fetching and importing meal plans for the next 14 days...
 From 17.1.2026 to 31.1.2026
 { daysProcessed: 10, mealsInserted: 80, planMealsInserted: 80 }
 ```
-
-**Configure day range**
-In the [query-worker.ts](/src/query-worker.ts) you can change the constant `dayDistance` to your liking to adjust the end date of the query from the current day.
+**Customizing the Query Range**  
+To adjust how many days ahead the worker fetches, edit the `dayDistance` constant in [`query-worker.ts`](/src/query-worker.ts). By default, it fetches 14 days from the current date; modify this value to suit your needs.
 
 ## API Documentation
 
-Once the server is running, access the Swagger UI at `/swagger` or the OpenAPI spec at `/openapi.yaml`.  
-The file is also located at [`/docs/api/openapi.yaml`](/docs/api/openapi.yaml) or [`/docs/api/openapi.json`](/docs/api/openapi.json).
+Once the server is up and running, you can access the Swagger UI at `/swagger` or get the OpenAPI specification at `/openapi.yaml`.  
+Additionally, the specification files are available at [`/docs/api/openapi.yaml`](/docs/api/openapi.yaml) and [`/docs/api/openapi.json`](/docs/api/openapi.json).
 
 ## Contributing
 
