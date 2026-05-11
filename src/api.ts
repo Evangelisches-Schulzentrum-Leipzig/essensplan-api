@@ -5,7 +5,7 @@ import { fetchAndImportRange } from './query.js';
 import { queryAllergens, querySupplements, queryMeals, queryMenues, queryDailyPlan, queryDateRangeMenues, queryDaysDatesOfYear, queryAvailableYears } from './db.js';
 import { getCanteen, getDayOfCanteen, getDaysOfCanteen, getFeedV2, getMealOfCanteen, getMealsOfCanteen } from './openmensa.js';
 
-config();
+config({ quiet: true });
 
 const app = express()
 const port = process.env['API_PORT'] || 80;

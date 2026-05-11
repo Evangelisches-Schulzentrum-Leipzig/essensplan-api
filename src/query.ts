@@ -1,7 +1,7 @@
 import { config } from 'dotenv';
 import mariadb, { Pool, PoolConnection } from 'mariadb';
 
-config();
+config({ quiet: true });
 
 interface TagesMenue {
     allergeneIds: string[];

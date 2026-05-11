@@ -22,7 +22,7 @@ const dietary_map_from_flags = (flags: number): string => {
     return labels.join(', ');
 };
 
-config();
+config({ quiet: true });
 
 let pool: Pool | null = null;
 
